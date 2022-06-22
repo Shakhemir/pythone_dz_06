@@ -5,22 +5,24 @@
 
 
 def arith_expression(exp):
-    def mult(exp):
-        facts = exp.split('*')
-        result = 1
-        for i in facts:
-            if '.' in i:
-                result *= float(i)
+    def mult_or_div(exp):
+        mult_div_lst = []
+        for ch in exp:
+            if ch in ('/', '*'):
+                mult_div_lst.append(ch)
+        facts = exp.replace('/', '*').split('*')
+        result = float(facts[0]) if '.' in facts[0] else int(facts[0])
+        for i, number in enumerate(facts[1:]):
+            if '.' in number:
+                number = float(number)
             else:
-                result *= int(i)
+                number = int(number)
+            if mult_div_lst[i] == '*':
+                result *= number
+            else:
+                result /= number
         return result
 
-    def mult_or_div(exp):
-        dividers = exp.split('/')
-        result = mult(dividers[0])
-        for i in dividers[1:]:
-            result /= mult(i)
-        return result
 
     "Проверка на скобки. Используем рекурсию для решения"
     while '(' in exp:
@@ -50,8 +52,9 @@ def arith_expression(exp):
 
 # s = input('Введите арифметическое выражение: ')
 # s = '2 + 3*(1/2 + 4/(5-3)) + 2*((1+2)*3 + 1)'
-s = '2+(1+2)*3 + 3*(1/2 + 4/(5-3))'
-# print(eval(s))
+# s = '2+(1+2)*3 + 3*(1/2 + 4/(5-3))'
+s = '10/2*5'
+print(eval(s))
 solution = arith_expression(s)
 print(solution)
-# print(solution == eval(s))
+print(solution == eval(s))
